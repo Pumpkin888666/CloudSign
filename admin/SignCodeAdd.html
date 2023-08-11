@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>设置今日的签到码</title>
+    <link rel="stylesheet" href="../pkg/bootstrap.min.css">
+    <link rel="stylesheet" href="../pkg/jquery-3.7.0.min.js">
+    <style>
+        .card {
+            margin: 10vh auto;
+            box-shadow: 2px 2px 12px 2px #ccc;
+            border-radius: 7px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="card" style="width: 18rem;">
+            <img src="../static/images/index.PNG" class="card-img-top">
+            <div class="card-body">
+                <h3>云签到-添加签到码</h3>
+                <form action="../control/addSignCode.php" method="post">
+                    <div class="form-group">
+                        <label for="SignCode">签到码:</label>
+                        <input type="number" class="form-control" id="SignCode" name="SignCode"
+                            aria-describedby="SignHelp">
+                        <small id="SignHelp" class="form-text text-muted">签到码每日只能设置一个。</small>
+                    </div>
+                    <input type="submit" value="添加" class="btn btn-primary" name="submit">
+                </form>
+            </div>
+        </div>
+    </div>
+    <script src="../pkg/bootstrap.min.js"></script>
+    <script src="../pkg/popper.min.js"></script>
+</body>
+
+</html>
