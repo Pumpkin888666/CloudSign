@@ -10,18 +10,22 @@ if(!isset($_SESSION['username'])){
 function addCode($mysqli,$SignCode){
     $time = date("Y/m/d");
 
-    $sql = "SELECT * FROM SignCode";
-    $result = $mysqli->query($sql);
-    if ($result->num_rows > 0) {
-        while($row = $result->fetch_assoc()) {
-            if($row['time'] == $time){
-                exit( "
+    $time = date("Y/m/d");
+    $sql = "SELECT code FROM SignCode WHERE time = ?";
+    $stmt = $mysqli->prepare($sql);
+    $stmt->bind_param("s",$time);
+    if($stmt->execute()){
+        $stmt->bind_result($code);
+        while($stmt->fetch()){
+           exit( "
                 <script>
-                    window.location.href='../Error.php?message=今日你已经添加过了。&returnlink=./admin/SignCodeAdd.html';
+                    window.location.href='../Error.php?message=今日你已经添加过了。&returnlink=./admin/index.php';
                 </script>");
-            } //验证今日是否添加过code
         }
     }
+    
+    $stmt->free_result();
+    $stmt->close();
 
     //预处理语句
     $sql = "INSERT INTO SignCode(time,code) VALUES(?,?)";

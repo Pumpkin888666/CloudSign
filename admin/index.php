@@ -59,22 +59,26 @@ include_once('../models/core_mysql.php')
                 <div class="card" style="width: 18rem;">
                     <div class="card-body">
                         <?php
-                        $sql = "SELECT * FROM SignCode";
-                        $result = $mysqli->query($sql);
                         $time = date("Y/m/d");
-                        if ($result->num_rows > 0) {
-                            while ($row = $result->fetch_assoc()) {
-                                if ($row['time'] == $time) {
-                                    echo'<h5>今日已设置签到码！</h5>';
-                                    echo("<h3 style='text-align:center;'>".$row['code']."</h3>");
-                                    echo "<a href='./SignCodeAdd.html' class='btn btn-success'>签到码设置页面</a>";
-                                }; 
+                        $sql = "SELECT code FROM SignCode WHERE time = ?";
+                        $stmt = $mysqli->prepare($sql);
+                        $stmt->bind_param("s",$time);
+                        if($stmt->execute()){
+                            $stmt->bind_result($code);
+                            while($stmt->fetch()){
+                               echo'<h5>今日已设置签到码！</h5>';
+                                echo("<h3 style='text-align:center;'>".$code."<h3>");
+                                echo "<a href='./SignCodeAdd.html' class='btn btn-success'>签到码设置页面</a>";
                             }
-                        }else{
-                            echo'<h5>今日还未设置签到码！</h5>';
-                            echo("<h3 style='text-align:center;'>NULL</h3>");
-                            echo("<a href='./SignCodeAdd.html' class='btn btn-success'>去设置</a>");
                         }
+                        if(!$code){
+                            echo'<h5>今日还未设置签到码！</h5>';
+                            echo "<h3 style='text-align:center;'>NULL</h3>";
+                            echo "<a href='./SignCodeAdd.html' class='btn btn-success'>去设置</a>";
+                        }
+                        
+                        $stmt->free_result();
+                        $stmt->close();
                         ?>
 
                         
@@ -164,16 +168,17 @@ include_once('../models/core_mysql.php')
           <div class="modal-body">
             <ol>
                    <?php
-                        $sql = "SELECT * FROM Sign";
-                        $result = $mysqli->query($sql);
-                        $time = date("Y/m/d");
-                        if ($result->num_rows > 0) {
-                            while ($row = $result->fetch_assoc()) {
-                                if ($row['time'] == $time) {
-                                    echo'<li><p>'.$row['name'].'</p></li>';
-                                }; 
-                            }
+                    $time = date("Y/m/d");
+                    $sql = "SELECT name FROM Sign WHERE time = ?";
+                    $stmt = $mysqli->prepare($sql);
+                    $stmt->bind_param("s",$time);
+                    if($stmt->execute()){
+                        $stmt->bind_result($name);
+                        while($stmt->fetch()){
+                           echo'<li><p>'.$name.'</p></li>';
                         }
+                    }
+                    
                     ?>    
                         <li><p>没有更多了...</p></li> 
             </ol>
